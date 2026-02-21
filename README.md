@@ -1,34 +1,57 @@
 # Thermal Analysis & Cooling Strategy for Tesla Model S Plaid Battery Pack
 
 ## Brief Overview
-This project evaluates the thermal behavior of the 2022-23 Tesla Model S Plaid battery pack under various driving conditions, namely: highway cruise, supercharging and track mode. The vehicle utilizes an architecture of 7,920 Panasonic 18650 cells arranged in a 110S72P configuration to deliver a peak power of 1,020 hp. 
-Using MATLAB, a lumped heat capacitance model was developed to simulate and compute the heat generated and therefore design a liquid cooling strategy capable of preventing thermal throttling during extreme track conditions.
+This mini project evaluates the thermal behavior of the 2022-23 Tesla Model S Plaid battery pack under various driving conditions, namely: highway cruise, charging and track mode. The vehicle utilizes an architecture of 7,920 Panasonic 18650 cells arranged in a 110S72P configuration to deliver a peak power of 1,020 hp. 
+Using MATLAB, a lumped heat capacitance model was developed to simulate and compute the heat generated and therefore design a liquid cooling strategy capable of preventing thermal throttling during extreme track conditions. This mini project was done in fulfilment of ME F317: Engines, Motors and Mobility, a course offered at BITS Pilani.
 
 ## Methodology
-The thermal response of the 479 kg battery pack was simulated using a lumped heat capacitance model. This approach assumes a uniform temperature distribution throughout the battery pack. START The primary source of heat generation was modeled as Joule heating originating from the internal resistance of the cells ($Q_{gen}=I^{2}\cdot R_{internal}$)[cite: 46, 47]. [cite_start]Heat rejection was governed by Newton's law of cooling ($Q_{cooling}=UA\cdot(T_{pack}-T_{coolant})$)[cite: 48, 49]. [cite_start]The fundamental energy balance equation states that the rate of change of internal energy is equal to the net heat generation minus heat removal[cite: 50]:
+The thermal response of the 479 kg battery pack was simulated using a lumped heat capacitance model. This approach assumes a uniform temperature distribution throughout the battery pack. The primary source of heat generation was modeled as Joule heating originating from the internal resistance of the cells ($Q_{gen}=I^{2}\cdot R_{internal. Heat rejection was governed by Newton's law of cooling ($Q_{cooling}=UA\cdot(T_{pack}-T_{coolant})$). The fundamental energy balance equation states that the rate of change of internal energy is equal to the net heat generation minus heat removal:
 
-[cite_start]$$m\cdot C_{p}\cdot\frac{dT}{dt}=Q_{gen}-Q_{cooling}$$ [cite: 51]
+$$m\cdot C_{p}\cdot\frac{dT}{dt}=Q_{gen}-Q_{cooling}$$ 
 
-## Simulation Results: Drive Modes
-[cite_start]The MATLAB simulation evaluated the cumulative effect of heat generation versus heat rejection over a 30-minute drive cycle across three distinct scenarios[cite: 57, 66]:
+## Simulation
+The MATLAB simulation evaluated the cumulative effect of heat generation versus heat rejection over a 30-minute drive cycle across three distinct drive conditions by plotting a temperature vs time graph using the following discretized equation:
 
-* [cite_start]**Highway Cruise (120 kph):** At a constant 55 A load, heat generation was 115 W[cite: 69, 71, 72]. [cite_start]This resulted in a negligible temperature rise to 25.1°C[cite: 74, 111].
-* [cite_start]**Supercharging (250 kW Peak):** Pulling 350 A generated a significant 4.66 kW of heat[cite: 77, 78, 79]. [cite_start]This requires adequate heat rejection to prevent significant heating, reaching 28.9°C in the simulation[cite: 80, 111].
-* [cite_start]**Track Mode (Repeated Launches):** Operating at an estimated 1,000 A RMS, the pack generated 38.00 kW of waste heat[cite: 83, 84, 85]. [cite_start]Without adequate cooling, the pack rapidly approaches the thermal throttling limit of roughly 55°C[cite: 88].
+$$T_{new} = T_{old} + \frac{(Q_{gen} - Q_{cooling}) \cdot dt}{m \cdot C_p}$$
 
-*(Insert your MATLAB plot `thermal_plot.png` here)*
+### Parameters
+| Parameter | Symbol | Value | Unit | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **Pack Mass** | $m$ | 479 | kg | Verified from parts catalog (Cells + Modules) |
+| **Specific Heat** | $C_p$ | 850 | J/kg·K | Weighted average for NCA cylindrical cells |
+| **Pack Resistance** | $R$ | 0.038 | Ω | Derived from cell configuration: (0.025 × 110) / 72 |
+| **Cooling Coefficient** | $UA$ | 1200 | W/K | Estimated heat transfer capability |
+| **Initial Temperature** | $T_{0}$ | 25 | °C | Assumed initial temperature |
 
+### Results
+* **Highway Cruise (120 kph):** At a constant 55 A load (assumed a constant), heat generation was 115 W. This resulted in a negligible temperature rise to 25.1°C.
+* **Charging (250 kW Peak):** Pulling 350 A generated a significant 4.66 kW of heat. This requires adequate heat rejection to prevent significant heating, reaching 28.9°C in the simulation.
+* **Track Mode (Agressive driving):** Operating at an estimated 1,000 A RMS, the pack generated 38.00 kW of heat. Since this drive mode generates the most amount of heat, it is the critical desgin case for the cooling system.
+
+<p align="center">
+  <img src="images/Temp vs Time.jpg" width="700">
+  <br>
+  <em>Figure 1: The temperatures for all drive modes saturate after some time thereby achieving steady state</em>
+</p>
 
 ## Proposed Thermal Management System
-[cite_start]To effectively counteract the 38 kW of heat generated in Track Mode, an active liquid cooling approach is proposed[cite: 116, 117]. 
+To effectively counteract the 38 kW of heat generated in Track Mode, an active liquid cooling approach is proposed. 
 
-* [cite_start]**Coolant:** A 50/50 Ethylene Glycol and Water (EGW) mixture was selected over forced air or direct refrigerant expansion[cite: 117, 120, 121].
-* [cite_start]**Architecture:** The system utilizes vertical cooling ribbons in contact with each individual 18650 cell[cite: 133]. [cite_start]This geometry provides a large surface area for heat transfer and exploits the radial thermal conductivity of cylindrical cells[cite: 134, 135].
-* [cite_start]**Flow Layout:** Parallel manifolds are utilized instead of a series configuration to ensure every module gets fresh EGW coolant at the same temperature[cite: 138, 139, 140].
-* [cite_start]**Flow Rate:** To keep the temperature difference across the pack low (assumed 5°C), the required mass flow rate of the EGW coolant was calculated to be 2.21 kg/s (approximately 126 Liters/minute)[cite: 145, 146, 147].
+* **Coolant:** A 50/50 Ethylene Glycol and Water (EGW) mixture was selected over forced air or direct refrigerant expansion.
+* **Architecture:** The system utilizes vertical cooling ribbons in contact with each individual 18650 cell. This geometry provides a large surface area for heat transfer and exploits the radial thermal conductivity of cylindrical cells.
+* **Flow Layout:** Parallel manifolds are utilized instead of a series configuration to ensure every module gets fresh EGW coolant at the same temperature.
+* **Flow Rate:** To keep the temperature difference across the pack low (assume 5°C), the required mass flow rate of the EGW coolant was calculated to be 2.21 kg/s.
 
+## Repository Structure
 
-
-## Files Included
-* [cite_start]`docs/ProjectReport.pdf`: Comprehensive thermodynamic analysis and design strategy[cite: 5, 7].
-* [cite_start]`src/thermal_simulation.m`: The MATLAB script utilized to calculate heat generation and plot the temperature vs time plot during different drive modes[cite: 59, 218].
+```text
+tesla-battery-thermal-analysis/
+│
+├── README.md                
+├── docs/
+│   └── ProblemStatement.pdf  # ME F317 problem statement and context 
+│   └── ProjectReport.pdf     # Mini project report
+├── src/
+│   └── thermal_simulation.m  # MATLAB script for heat generation and temperature simulation
+└── images/
+    ├── Temp vs Time.png      # Temperature vs Time MATLAB plot
