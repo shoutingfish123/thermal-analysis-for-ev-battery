@@ -1,4 +1,5 @@
 # Thermal Analysis & Cooling Strategy for Tesla Model S Plaid Battery Pack
+![MATLAB](https://img.shields.io/badge/MATLAB-R2024b-orange)
 
 ## Brief Overview
 This mini project evaluates the thermal behavior of the 2022-23 Tesla Model S Plaid battery pack under various driving conditions, namely: highway cruise, charging and track mode. The vehicle utilizes an architecture of 7,920 Panasonic 18650 cells arranged in a 110S72P configuration to deliver a peak power of 1,020 hp. 
