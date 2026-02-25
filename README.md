@@ -6,7 +6,7 @@ This mini project evaluates the thermal behavior of the 2022-23 Tesla Model S Pl
 Using MATLAB, a lumped heat capacitance model was developed to simulate and compute the heat generated and therefore design a liquid cooling strategy capable of preventing thermal throttling during extreme track conditions. This mini project was done in fulfilment of ME F317: Engines, Motors and Mobility, a course offered at BITS Pilani.
 
 ## Methodology
-The thermal response of the 479 kg battery pack was simulated using a lumped heat capacitance model. This approach assumes a uniform temperature distribution throughout the battery pack. The primary source of heat generation was modeled as Joule heating originating from the internal resistance of the cells ($Q_{gen}=I^{2}\cdot R_{internal}$). Heat rejection was governed by Newton's law of cooling ($Q_{cooling}=UA\cdot(T_{pack}-T_{coolant})$). The fundamental energy balance equation states that the rate of change of internal energy is equal to the net heat generation minus heat removal:
+The thermal response of the 479 kg battery pack was simulated using a lumped heat capacitance model. This approach assumes a uniform temperature distribution throughout the battery pack. The primary source of heat generation was modeled as Joule heating originating from the internal resistance of the cells ($Q_{gen}=I^{2}\cdot R_{internal}$). Heat rejection was governed by Newton's law of cooling $Q_{cooling}=UA\cdot(T_{pack}-T_{coolant})$. The fundamental energy balance equation states that the rate of change of internal energy is equal to the net heat generation minus heat removal:
 
 $$m\cdot C_{p}\cdot\frac{dT}{dt}=Q_{gen}-Q_{cooling}$$ 
 
